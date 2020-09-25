@@ -8,7 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 firebase.initializeApp({
-  //your Firebase App Config i hided mine ok
+  //your Firebase App C
 });
 
 const auth = firebase.auth();
