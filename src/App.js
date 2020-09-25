@@ -1,8 +1,39 @@
 import React from "react";
 import "./App.css";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/auth";
 
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useColllectionData } from "react-firebase-hooks/firestore";
+
+firebase.initializeApp({
+  apiKey: "AIzaSyAmMTxHPSXGoYwwaVgsoCeQbrW-iM55Rv4",
+  authDomain: "chat-app-9f624.firebaseapp.com",
+  databaseURL: "https://chat-app-9f624.firebaseio.com",
+  projectId: "chat-app-9f624",
+  storageBucket: "chat-app-9f624.appspot.com",
+  messagingSenderId: "959059630558",
+  appId: "1:959059630558:web:3b728b1cef6e5b9cd3654f",
+  measurementId: "G-2EYTS4P0MV",
+});
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+
+const user = useAuthState(auth);
 function App() {
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <header></header>
+      <section>{user ? <ChatRoom></ChatRoom> : <SignIn></SignIn>}</section>
+    </div>
+  );
 }
-
+const ChatRoom = () => {
+  return <div></div>;
+};
+const SignIn = () => {
+  return <div></div>;
+};
 export default App;
