@@ -25,7 +25,10 @@ function App() {
   const [user] = useAuthState(auth);
   return (
     <div className="App">
-      <header></header>
+      <header>
+        Chat App
+        <SignOut></SignOut>
+      </header>
       <section>{user ? <ChatRoom></ChatRoom> : <SignIn></SignIn>}</section>
     </div>
   );
@@ -78,12 +81,12 @@ const ChatRoom = () => {
   };
   return (
     <>
-      <div>
+      <main>
         {messages &&
           messages.map((msg) => {
             return <ChatMessage key={msg.id} message={msg}></ChatMessage>;
           })}
-      </div>
+      </main>
       <form onSubmit={sendMessage}>
         <input
           value={FormValue}
