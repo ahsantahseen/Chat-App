@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useColllectionData } from "react-firebase-hooks/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 firebase.initializeApp({
   apiKey: "AIzaSyAmMTxHPSXGoYwwaVgsoCeQbrW-iM55Rv4",
@@ -30,7 +30,17 @@ function App() {
     </div>
   );
 }
-const ChatRoom = () => {};
+const ChatMessage = (props) => {
+  const { text, uid, photoURL } = props.message;
+
+  const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
+  return (
+    <div className={`message ${messageClass}`}>
+      <img src={photoURL} alt="userImage"></img>
+      <p>{text}</p>
+    </div>
+  );
+};
 const SignIn = () => {
   const GoogleSignIn = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -45,6 +55,43 @@ const SignIn = () => {
 const SignOut = () => {
   return (
     auth.currentUser && <button onClick={() => auth.signOut()}>SignOut</button>
+  );
+};
+
+const ChatRoom = () => {
+  const MessagesRef = firestore.collection("messages");
+  const query = MessagesRef.orderBy("createdAt").limit(20);
+  const [messages] = useCollectionData(query, { idField: "id" });
+  const [FormValue, setFormValue] = useState("");
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    const { uid, photoURL } = auth.currentUser;
+    await MessagesRef.add({
+      text: FormValue,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      photoURL,
+      uid,
+    });
+
+    setFormValue("");
+  };
+  return (
+    <>
+      <div>
+        {messages &&
+          messages.map((msg) => {
+            return <ChatMessage key={msg.id} message={msg}></ChatMessage>;
+          })}
+      </div>
+      <form onSubmit={sendMessage}>
+        <input
+          value={FormValue}
+          onChange={(e) => setFormValue(e.target.value)}
+        ></input>
+        <button type="submit">S</button>
+      </form>
+    </>
   );
 };
 export default App;
